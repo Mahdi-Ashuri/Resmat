@@ -1,4 +1,4 @@
-package entitie;
+package com.example.Resmat.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +21,7 @@ public class TypeMateriel {
     @Column(name = "nom", length = 150)
     private String nom;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", length = 64000)
     private String description;
 
     @Column(name = "dureeMaxEmprunt")

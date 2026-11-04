@@ -1,4 +1,4 @@
-package entitie;
+package com.example.Resmat.entities;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +26,7 @@ public class Reservation {
     @Column(name = "dateFin")
     private LocalDateTime dateFin;
 
-    @Column(name = "commentaire", columnDefinition = "TEXT")
+    @Column(name = "commentaire", length = 64000)
     private String commentaire;
 
     @Column(name = "dateResa")
@@ -35,7 +35,7 @@ public class Reservation {
     @Column(name = "avis")
     private boolean avis;
 
-    @Column(name = "motivationAvis", columnDefinition = "TEXT")
+    @Column(name = "motivationAvis", length = 64000)
     private String motivationAvis;
 
     @ManyToOne

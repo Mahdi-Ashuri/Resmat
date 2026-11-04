@@ -1,13 +1,13 @@
 services:
   mariadb:
     image: mariadb:11
-    container_name: mon-projet-mariadb
+    container_name: resmat-mariadb
     restart: unless-stopped
     environment:
-      MARIADB_ROOT_PASSWORD: root_dev_password
-      MARIADB_DATABASE: mon_projet
-      MARIADB_USER: spring_user
-      MARIADB_PASSWORD: spring_dev_password
+      MARIADB_ROOT_PASSWORD: MyPassword
+      MARIADB_DATABASE: resmat
+      MARIADB_USER: resmat
+      MARIADB_PASSWORD: MyPassword
     ports:
       - "3306:3306"
     volumes:

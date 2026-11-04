@@ -1,4 +1,4 @@
-package entitie;
+package com.example.Resmat.entities;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -29,7 +30,7 @@ public class Emprunt {
     @Column(name = "dateretourEffective")
     private LocalDateTime dateRetourEffective;
 
-    @Column(name = "commentaires", columnDefinition = "TEXT")
+    @Column(name = "commentaires", length = 64000)
     private String commentaires;
 
     @Column(name = "degradation")
@@ -39,7 +40,7 @@ public class Emprunt {
     @JoinColumn(name = "Id_Materiel")
     private Materiel materiel;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "Id_Reservation")
     private Reservation reservation;
 
