@@ -1,0 +1,37 @@
+{{> include/header }}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Catégories</h1>
+    <a href="/categories/nouveau" class="btn btn-dark">Ajouter une catégorie</a>
+</div>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nom</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#categories}}
+        <tr>
+            <td>{{idCategorie}}</td>
+            <td>{{nom}}</td>
+            <td class="text-end">
+                <a href="/categories/{{idCategorie}}/modifier" class="btn btn-secondary btn-sm">Modifier</a>
+                <form action="/categories/{{idCategorie}}/supprimer" method="post" class="d-inline"
+                      onsubmit="return confirm('Supprimer cette catégorie ?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {{/categories}}
+    </tbody>
+</table>
+
+{{^categories}}
+<div class="alert alert-warning" role="alert">Aucune catégorie.</div>
+{{/categories}}
+
+{{> include/footer }}

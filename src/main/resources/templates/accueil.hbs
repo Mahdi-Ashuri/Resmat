@@ -1,12 +1,89 @@
+{{> include/header }}
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Resmat - Accueil</title>
-</head>
-<body>
-    <h1>{{message}}</h1>
-    <p>Mon application Spring Boot fonctionne !</p>
-</body>
-</html>
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold">Resmat</h1>
+    <p class="lead text-muted">Gestion des réservations et des prêts de matériel</p>
+    {{#message}}<p class="text-muted">{{.}}</p>{{/message}}
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 card-title">Catégories</h2>
+                <p class="card-text text-muted">Regrouper les types de matériel (informatique, audiovisuel…).</p>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3">
+                <a href="/categories" class="btn btn-dark">Accéder</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 card-title">Types de matériel</h2>
+                <p class="card-text text-muted">Définir les modèles, la durée maximale d'emprunt et le catalogue.</p>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3">
+                <a href="/types-materiel" class="btn btn-dark">Accéder</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 card-title">Matériels</h2>
+                <p class="card-text text-muted">Gérer les exemplaires et leur disponibilité.</p>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3">
+                <a href="/materiels" class="btn btn-dark">Accéder</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 card-title">Utilisateurs</h2>
+                <p class="card-text text-muted">Administrateurs, gestionnaires et emprunteurs.</p>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3">
+                <a href="/utilisateurs" class="btn btn-dark">Accéder</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 card-title">Réservations</h2>
+                <p class="card-text text-muted">Faire une demande, puis l'accepter ou la refuser.</p>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3">
+                <a href="/reservations" class="btn btn-dark">Accéder</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 card-title">Emprunts</h2>
+                <p class="card-text text-muted">Enregistrer la remise et le retour du matériel.</p>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3">
+                <a href="/emprunts" class="btn btn-dark">Accéder</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<p class="text-center text-muted mt-5 mb-0">
+    Parcours : Réservation → Traitement par un gestionnaire → Remise du matériel → Retour
+</p>
+
+{{> include/footer }}

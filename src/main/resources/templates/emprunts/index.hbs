@@ -1,0 +1,68 @@
+{{> include/header }}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Emprunts</h1>
+    <a href="/emprunts/remise" class="btn btn-dark">Enregistrer une remise</a>
+</div>
+
+<ul class="nav nav-pills mb-3">
+    <li class="nav-item"><a class="nav-link" href="/emprunts">Tous</a></li>
+    <li class="nav-item"><a class="nav-link" href="/emprunts?statut=encours">En cours</a></li>
+    <li class="nav-item"><a class="nav-link" href="/emprunts?statut=degrades">Avec dégradation</a></li>
+</ul>
+
+<div class="table-responsive">
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Matériel</th>
+            <th>Emprunteur</th>
+            <th>Remise</th>
+            <th>Retour prévu</th>
+            <th>Retour effectif</th>
+            <th>Statut</th>
+            <th>Dégradation</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#emprunts}}
+        <tr>
+            <td>{{idEmprunt}}</td>
+            <td>{{materiel.nom}}</td>
+            <td>{{reservation.emprunteur.prenom}} {{reservation.emprunteur.nom}}</td>
+            <td><span class="dt">{{dateRemise}}</span></td>
+            <td><span class="dt">{{dateRetourPrevue}}</span></td>
+            <td>
+                {{#dateRetourEffective}}<span class="dt">{{.}}</span>{{/dateRetourEffective}}
+                {{^dateRetourEffective}}—{{/dateRetourEffective}}
+            </td>
+            <td>
+                {{#dateRetourEffective}}<span class="badge bg-success">Rendu</span>{{/dateRetourEffective}}
+                {{^dateRetourEffective}}<span class="badge bg-warning text-dark">En cours</span>{{/dateRetourEffective}}
+            </td>
+            <td>
+                {{#degradation}}<span class="badge bg-danger" title="{{commentaires}}">Oui</span>{{/degradation}}
+                {{^degradation}}Non{{/degradation}}
+            </td>
+            <td class="text-end">
+                {{^dateRetourEffective}}
+                <a href="/emprunts/{{idEmprunt}}/retour" class="btn btn-success btn-sm">Retour</a>
+                {{/dateRetourEffective}}
+                <form action="/emprunts/{{idEmprunt}}/supprimer" method="post" class="d-inline"
+                      onsubmit="return confirm('Supprimer cet emprunt ?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {{/emprunts}}
+    </tbody>
+</table>
+</div>
+
+{{^emprunts}}
+<div class="alert alert-warning" role="alert">Aucun emprunt.</div>
+{{/emprunts}}
+
+{{> include/footer }}

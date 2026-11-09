@@ -1,0 +1,19 @@
+{{> include/header }}
+
+<h1 class="h3 mb-4">{{titre}}</h1>
+
+{{#categorie}}
+<form action="/categories/enregistrer" method="post" class="col-md-6">
+    <input type="hidden" name="idCategorie" value="{{idCategorie}}">
+
+    <div class="mb-3">
+        <label for="nom" class="form-label">Nom</label>
+        <input type="text" class="form-control" id="nom" name="nom" value="{{nom}}" maxlength="150" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="/categories" class="btn btn-outline-secondary">Annuler</a>
+</form>
+{{/categorie}}
+
+{{> include/footer }}

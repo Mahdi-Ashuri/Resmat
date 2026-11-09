@@ -20,20 +20,20 @@ public class Reservation {
     @Column(name = "Id_Reservation")
     private int idReservation;
 
-    @Column(name = "dateDebut")
+    @Column(name = "dateDebut", nullable = false)
     private LocalDateTime dateDebut;
 
-    @Column(name = "dateFin")
+    @Column(name = "dateFin", nullable = false)
     private LocalDateTime dateFin;
 
     @Column(name = "commentaire", length = 64000)
     private String commentaire;
 
-    @Column(name = "dateResa")
-    private LocalDateTime dateResa;
+    @Column(name = "dateResa", nullable = false)
+    private LocalDateTime dateResa = LocalDateTime.now();
 
     @Column(name = "avis")
-    private boolean avis;
+    private Boolean avis;
 
     @Column(name = "motivationAvis", length = 64000)
     private String motivationAvis;
@@ -42,12 +42,12 @@ public class Reservation {
     @JoinColumn(name = "gestionnaireId")
     private Utilisateur gestionnaire;
 
-    @ManyToOne
-    @JoinColumn(name = "Id_TypeMateriel")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "Id_TypeMateriel", nullable = false)
     private TypeMateriel typeMateriel;
 
-    @ManyToOne
-    @JoinColumn(name = "emprunteurId")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "emprunteurId", nullable = false)
     private Utilisateur emprunteur;
 
     public Reservation() {
@@ -93,11 +93,11 @@ public class Reservation {
         this.dateResa = dateResa;
     }
 
-    public boolean isAvis() {
+    public Boolean getAvis() {
         return avis;
     }
 
-    public void setAvis(boolean avis) {
+    public void setAvis(Boolean avis) {
         this.avis = avis;
     }
 

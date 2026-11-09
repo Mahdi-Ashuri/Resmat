@@ -18,20 +18,20 @@ public class TypeMateriel {
     @Column(name = "Id_TypeMateriel")
     private int idTypeMateriel;
 
-    @Column(name = "nom", length = 150)
+    @Column(name = "nom", length = 150, nullable = false)
     private String nom;
 
     @Column(name = "description", length = 64000)
     private String description;
 
-    @Column(name = "dureeMaxEmprunt")
+    @Column(name = "dureeMaxEmprunt", nullable = false)
     private int dureeMaxEmprunt;
 
-    @Column(name = "auCatalogue")
+    @Column(name = "auCatalogue", nullable = false)
     private boolean auCatalogue;
 
-    @ManyToOne
-    @JoinColumn(name = "Id_Categorie")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "Id_Categorie", nullable = false)
     private Categorie categorie;
 
     public TypeMateriel() {

@@ -1,9 +1,11 @@
 package com.example.Resmat.repositories;
 
-import com.example.Resmat.entities.Utilisateur;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import com.example.Resmat.entities.Utilisateur;
 
 public interface UtilisateurRepositorie extends JpaRepository<Utilisateur, Integer> {
 
@@ -14,4 +16,6 @@ public interface UtilisateurRepositorie extends JpaRepository<Utilisateur, Integ
     boolean existsByLogin(String login);
 
     boolean existsByEmail(String email);
+
+    List<Utilisateur> findByRole(String role);
 }

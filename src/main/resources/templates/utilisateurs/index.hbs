@@ -1,0 +1,43 @@
+{{> include/header }}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Utilisateurs</h1>
+    <a href="/utilisateurs/nouveau" class="btn btn-dark">Ajouter un utilisateur</a>
+</div>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nom</th>
+            <th>Login</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#utilisateurs}}
+        <tr>
+            <td>{{idUtilisateur}}</td>
+            <td>{{prenom}} {{nom}}</td>
+            <td>{{login}}</td>
+            <td>{{email}}</td>
+            <td><span class="badge bg-info text-dark">{{role}}</span></td>
+            <td class="text-end">
+                <a href="/utilisateurs/{{idUtilisateur}}/modifier" class="btn btn-secondary btn-sm">Modifier</a>
+                <form action="/utilisateurs/{{idUtilisateur}}/supprimer" method="post" class="d-inline"
+                      onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {{/utilisateurs}}
+    </tbody>
+</table>
+
+{{^utilisateurs}}
+<div class="alert alert-warning" role="alert">Aucun utilisateur.</div>
+{{/utilisateurs}}
+
+{{> include/footer }}

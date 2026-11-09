@@ -1,0 +1,29 @@
+{{> include/header }}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <h1 class="h3 mb-4 text-center">Connexion</h1>
+
+        <form action="/connexion" method="post">
+            <div class="mb-3">
+                <label for="login" class="form-label">Login</label>
+                <input type="text" class="form-control" id="login" name="login" value="{{login}}"
+                       maxlength="50" autocomplete="username" required autofocus>
+            </div>
+
+            <div class="mb-4">
+                <label for="motDePasse" class="form-label">Mot de passe</label>
+                <input type="password" class="form-control" id="motDePasse" name="motDePasse"
+                       autocomplete="current-password" required>
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100">Se connecter</button>
+        </form>
+
+        <p class="text-center text-muted small mt-4 mb-0">
+            Pas encore de compte ? <a href="/inscription">Créer un compte</a>
+        </p>
+    </div>
+</div>
+
+{{> include/footer }}

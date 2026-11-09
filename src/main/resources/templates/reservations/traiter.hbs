@@ -1,0 +1,61 @@
+{{> include/header }}
+
+<h1 class="h3 mb-4">Traiter la réservation</h1>
+
+{{#reservation}}
+<div class="card mb-4 col-md-8">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Emprunteur</dt>
+            <dd class="col-sm-9">{{emprunteur.prenom}} {{emprunteur.nom}}</dd>
+
+            <dt class="col-sm-3">Type de matériel</dt>
+            <dd class="col-sm-9">{{typeMateriel.nom}}</dd>
+
+            <dt class="col-sm-3">Période</dt>
+            <dd class="col-sm-9"><span class="dt">{{dateDebut}}</span> → <span class="dt">{{dateFin}}</span></dd>
+
+            <dt class="col-sm-3">Demandée le</dt>
+            <dd class="col-sm-9"><span class="dt">{{dateResa}}</span></dd>
+
+            <dt class="col-sm-3">Commentaire</dt>
+            <dd class="col-sm-9">{{commentaire}}</dd>
+        </dl>
+    </div>
+</div>
+
+<form action="/reservations/{{idReservation}}/traiter" method="post" class="col-md-6">
+
+    <div class="mb-3">
+        <label for="idGestionnaire" class="form-label">Gestionnaire</label>
+        <select class="form-select" id="idGestionnaire" name="idGestionnaire" required>
+            <option value="">Choisir un gestionnaire…</option>
+            {{#gestionnairesOptions}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+            {{/gestionnairesOptions}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="accepte" id="accepte" value="true" checked>
+            <label class="form-check-label" for="accepte">Accepter la réservation</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="accepte" id="refuse" value="false">
+            <label class="form-check-label" for="refuse">Refuser la réservation</label>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label for="motivation" class="form-label">Motivation</label>
+        <textarea class="form-control" id="motivation" name="motivation" rows="3"></textarea>
+        <div class="form-text">Obligatoire en cas de refus.</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Valider la décision</button>
+    <a href="/reservations" class="btn btn-outline-secondary">Annuler</a>
+</form>
+{{/reservation}}
+
+{{> include/footer }}

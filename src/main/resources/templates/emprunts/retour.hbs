@@ -1,0 +1,42 @@
+{{> include/header }}
+
+<h1 class="h3 mb-4">Retour du matériel</h1>
+
+{{#emprunt}}
+<div class="card mb-4 col-md-8">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Matériel</dt>
+            <dd class="col-sm-9">{{materiel.nom}}</dd>
+
+            <dt class="col-sm-3">Emprunteur</dt>
+            <dd class="col-sm-9">{{reservation.emprunteur.prenom}} {{reservation.emprunteur.nom}}</dd>
+
+            <dt class="col-sm-3">Remis le</dt>
+            <dd class="col-sm-9"><span class="dt">{{dateRemise}}</span></dd>
+
+            <dt class="col-sm-3">Retour prévu</dt>
+            <dd class="col-sm-9"><span class="dt">{{dateRetourPrevue}}</span></dd>
+        </dl>
+    </div>
+</div>
+
+<form action="/emprunts/{{idEmprunt}}/retour" method="post" class="col-md-6">
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="degradation" name="degradation" value="true">
+        <label class="form-check-label" for="degradation">Le matériel est dégradé</label>
+        <div class="form-text">Un matériel dégradé reste indisponible tant qu'il n'est pas vérifié.</div>
+    </div>
+
+    <div class="mb-4">
+        <label for="commentaires" class="form-label">Commentaires</label>
+        <textarea class="form-control" id="commentaires" name="commentaires" rows="3">{{commentaires}}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer le retour</button>
+    <a href="/emprunts" class="btn btn-outline-secondary">Annuler</a>
+</form>
+{{/emprunt}}
+
+{{> include/footer }}

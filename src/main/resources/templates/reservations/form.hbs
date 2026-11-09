@@ -1,0 +1,50 @@
+{{> include/header }}
+
+<h1 class="h3 mb-4">{{titre}}</h1>
+
+{{#reservation}}
+<form action="/reservations/enregistrer" method="post" class="col-md-6">
+    <input type="hidden" name="idReservation" value="{{idReservation}}">
+
+    <div class="mb-3">
+        <label for="emprunteur" class="form-label">Emprunteur</label>
+        <select class="form-select" id="emprunteur" name="emprunteur.idUtilisateur" required>
+            <option value="">Choisir un emprunteur…</option>
+            {{#emprunteursOptions}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+            {{/emprunteursOptions}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="typeMateriel" class="form-label">Type de matériel</label>
+        <select class="form-select" id="typeMateriel" name="typeMateriel.idTypeMateriel" required>
+            <option value="">Choisir un type…</option>
+            {{#typesOptions}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+            {{/typesOptions}}
+        </select>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="dateDebut" class="form-label">Début</label>
+            <input type="datetime-local" class="form-control" id="dateDebut" name="dateDebut" value="{{dateDebut}}" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="dateFin" class="form-label">Fin</label>
+            <input type="datetime-local" class="form-control" id="dateFin" name="dateFin" value="{{dateFin}}" required>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label for="commentaire" class="form-label">Commentaire</label>
+        <textarea class="form-control" id="commentaire" name="commentaire" rows="3">{{commentaire}}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="/reservations" class="btn btn-outline-secondary">Annuler</a>
+</form>
+{{/reservation}}
+
+{{> include/footer }}

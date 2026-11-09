@@ -1,0 +1,49 @@
+{{> include/header }}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5">
+        <h1 class="h3 mb-4 text-center">Créer un compte</h1>
+
+        <form action="/inscription" method="post">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="prenom" class="form-label">Prénom</label>
+                    <input type="text" class="form-control" id="prenom" name="prenom" value="{{prenom}}" maxlength="50" required autofocus>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="nom" class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom" value="{{nom}}" maxlength="50" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{email}}" maxlength="255" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="login" class="form-label">Login</label>
+                <input type="text" class="form-control" id="login" name="login" value="{{login}}" maxlength="50" autocomplete="username" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="motDePasse" class="form-label">Mot de passe</label>
+                <input type="password" class="form-control" id="motDePasse" name="motDePasse" minlength="8" autocomplete="new-password" required>
+                <div class="form-text">8 caractères minimum.</div>
+            </div>
+
+            <div class="mb-4">
+                <label for="confirmation" class="form-label">Confirmer le mot de passe</label>
+                <input type="password" class="form-control" id="confirmation" name="confirmation" minlength="8" autocomplete="new-password" required>
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100">Créer mon compte</button>
+        </form>
+
+        <p class="text-center text-muted small mt-4 mb-0">
+            Déjà un compte ? <a href="/connexion">Se connecter</a>
+        </p>
+    </div>
+</div>
+
+{{> include/footer }}

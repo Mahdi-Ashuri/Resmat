@@ -21,27 +21,27 @@ public class Emprunt {
     @Column(name = "Id_Emprunt")
     private int idEmprunt;
 
-    @Column(name = "dateRemise")
+    @Column(name = "dateRemise", nullable = false)
     private LocalDateTime dateRemise;
 
-    @Column(name = "dateRetourPrevue")
+    @Column(name = "dateRetourPrevue", nullable = false)
     private LocalDateTime dateRetourPrevue;
 
-    @Column(name = "dateretourEffective")
+    @Column(name = "dateRetourEffective")
     private LocalDateTime dateRetourEffective;
 
     @Column(name = "commentaires", length = 64000)
     private String commentaires;
 
-    @Column(name = "degradation")
+    @Column(name = "degradation", nullable = false)
     private boolean degradation;
 
-    @ManyToOne
-    @JoinColumn(name = "Id_Materiel")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "Id_Materiel", nullable = false)
     private Materiel materiel;
 
-    @OneToOne
-    @JoinColumn(name = "Id_Reservation")
+    @OneToOne(optional = false)
+    @JoinColumn(name = "Id_Reservation", nullable = false, unique = true)
     private Reservation reservation;
 
     public Emprunt() {

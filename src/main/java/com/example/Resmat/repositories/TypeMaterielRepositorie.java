@@ -1,9 +1,10 @@
 package com.example.Resmat.repositories;
 
-import com.example.Resmat.entities.TypeMateriel;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.example.Resmat.entities.TypeMateriel;
 
 public interface TypeMaterielRepositorie extends JpaRepository<TypeMateriel, Integer> {
 
@@ -12,4 +13,7 @@ public interface TypeMaterielRepositorie extends JpaRepository<TypeMateriel, Int
     List<TypeMateriel> findByCategorieIdCategorie(Integer idCategorie);
 
     List<TypeMateriel> findByAuCatalogueTrue();
+
+    // Pour empêcher la suppression d'une catégorie encore utilisée
+    boolean existsByCategorieIdCategorie(Integer idCategorie);
 }

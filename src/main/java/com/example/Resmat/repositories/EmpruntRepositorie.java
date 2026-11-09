@@ -1,17 +1,23 @@
 package com.example.Resmat.repositories;
 
-import com.example.Resmat.entities.Emprunt;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.example.Resmat.entities.Emprunt;
 
 public interface EmpruntRepositorie extends JpaRepository<Emprunt, Integer> {
 
     List<Emprunt> findByMaterielIdMateriel(Integer idMateriel);
 
-    List<Emprunt> findByReservationIdReservation(Integer idReservation);
+    Optional<Emprunt> findByReservationIdReservation(Integer idReservation);
+
+    boolean existsByReservationIdReservation(Integer idReservation);
 
     List<Emprunt> findByDateRetourEffectiveIsNull();
+
+    boolean existsByMaterielIdMaterielAndDateRetourEffectiveIsNull(Integer idMateriel);
 
     List<Emprunt> findByDegradationTrue();
 }

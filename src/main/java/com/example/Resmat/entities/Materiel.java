@@ -18,17 +18,17 @@ public class Materiel {
     @Column(name = "Id_Materiel")
     private int idMateriel;
 
-    @Column(name = "nom", length = 150)
+    @Column(name = "nom", length = 150, nullable = false)
     private String nom;
 
     @Column(name = "description", length = 64000)
     private String description;
 
-    @Column(name = "disponible")
-    private boolean disponible;
+    @Column(name = "disponible", nullable = false)
+    private boolean disponible = true;
 
-    @ManyToOne
-    @JoinColumn(name = "Id_TypeMateriel")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "Id_TypeMateriel", nullable = false)
     private TypeMateriel typeMateriel;
 
     public Materiel() {

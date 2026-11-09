@@ -1,9 +1,10 @@
 package com.example.Resmat.repositories;
 
-import com.example.Resmat.entities.Materiel;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.example.Resmat.entities.Materiel;
 
 public interface MaterielRepositorie extends JpaRepository<Materiel, Integer> {
 
@@ -14,4 +15,8 @@ public interface MaterielRepositorie extends JpaRepository<Materiel, Integer> {
     List<Materiel> findByDisponibleFalse();
 
     List<Materiel> findByTypeMaterielIdTypeMateriel(Integer idTypeMateriel);
+
+    List<Materiel> findByTypeMaterielIdTypeMaterielAndDisponibleTrue(Integer idTypeMateriel);
+
+    boolean existsByTypeMaterielIdTypeMateriel(Integer idTypeMateriel);
 }

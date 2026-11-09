@@ -1,0 +1,48 @@
+{{> include/header }}
+
+<h1 class="h3 mb-4">Remise du matériel</h1>
+
+{{^reservationsOptions}}
+<div class="alert alert-info" role="alert">
+    Aucune réservation acceptée en attente de remise.
+    <a href="/reservations?statut=attente" class="alert-link">Voir les réservations en attente</a>
+</div>
+{{/reservationsOptions}}
+
+{{#reservationsOptions}}
+{{#-first}}
+<form action="/emprunts/remise" method="post" class="col-md-6">
+
+    <div class="mb-3">
+        <label for="idReservation" class="form-label">Réservation acceptée</label>
+        <select class="form-select" id="idReservation" name="idReservation" required>
+            <option value="">Choisir une réservation…</option>
+            {{#reservationsOptions}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+            {{/reservationsOptions}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="idMateriel" class="form-label">Matériel remis</label>
+        <select class="form-select" id="idMateriel" name="idMateriel" required>
+            <option value="">Choisir un matériel disponible…</option>
+            {{#materielsOptions}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+            {{/materielsOptions}}
+        </select>
+        <div class="form-text">Le matériel doit être du même type que celui réservé.</div>
+    </div>
+
+    <div class="mb-4">
+        <label for="commentaires" class="form-label">Commentaires (état du matériel à la remise…)</label>
+        <textarea class="form-control" id="commentaires" name="commentaires" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer la remise</button>
+    <a href="/emprunts" class="btn btn-outline-secondary">Annuler</a>
+</form>
+{{/-first}}
+{{/reservationsOptions}}
+
+{{> include/footer }}

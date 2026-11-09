@@ -1,0 +1,65 @@
+{{> include/header }}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Réservations</h1>
+    <a href="/reservations/nouveau" class="btn btn-dark">Nouvelle réservation</a>
+</div>
+
+<ul class="nav nav-pills mb-3">
+    <li class="nav-item"><a class="nav-link" href="/reservations">Toutes</a></li>
+    <li class="nav-item"><a class="nav-link" href="/reservations?statut=attente">En attente</a></li>
+    <li class="nav-item"><a class="nav-link" href="/reservations?statut=acceptees">Acceptées</a></li>
+    <li class="nav-item"><a class="nav-link" href="/reservations?statut=refusees">Refusées</a></li>
+</ul>
+
+<div class="table-responsive">
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Emprunteur</th>
+            <th>Type de matériel</th>
+            <th>Début</th>
+            <th>Fin</th>
+            <th>Demandée le</th>
+            <th>Statut</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#reservations}}
+        <tr>
+            <td>{{idReservation}}</td>
+            <td>{{emprunteur.prenom}} {{emprunteur.nom}}</td>
+            <td>{{typeMateriel.nom}}</td>
+            <td><span class="dt">{{dateDebut}}</span></td>
+            <td><span class="dt">{{dateFin}}</span></td>
+            <td><span class="dt">{{dateResa}}</span></td>
+            <td>
+                {{#gestionnaire}}
+                    {{#avis}}<span class="badge bg-success">Acceptée</span>{{/avis}}
+                    {{^avis}}<span class="badge bg-danger" title="{{motivationAvis}}">Refusée</span>{{/avis}}
+                {{/gestionnaire}}
+                {{^gestionnaire}}<span class="badge bg-warning text-dark">En attente</span>{{/gestionnaire}}
+            </td>
+            <td class="text-end">
+                {{^gestionnaire}}
+                <a href="/reservations/{{idReservation}}/traiter" class="btn btn-success btn-sm">Traiter</a>
+                <a href="/reservations/{{idReservation}}/modifier" class="btn btn-secondary btn-sm">Modifier</a>
+                {{/gestionnaire}}
+                <form action="/reservations/{{idReservation}}/supprimer" method="post" class="d-inline"
+                      onsubmit="return confirm('Supprimer cette réservation ?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {{/reservations}}
+    </tbody>
+</table>
+</div>
+
+{{^reservations}}
+<div class="alert alert-warning" role="alert">Aucune réservation.</div>
+{{/reservations}}
+
+{{> include/footer }}
