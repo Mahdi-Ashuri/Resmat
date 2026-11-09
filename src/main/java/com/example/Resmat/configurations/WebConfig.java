@@ -1,3 +1,4 @@
+
 package com.example.Resmat.configurations;
 
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,13 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/connexion", "/inscription", "/error", "/favicon.ico");
+                .excludePathPatterns(
+                        "/connexion",
+                        "/inscription",
+                        "/error",
+                        "/favicon.ico",
+                        "/css/**",
+                        "/js/**"
+                );
     }
 }
