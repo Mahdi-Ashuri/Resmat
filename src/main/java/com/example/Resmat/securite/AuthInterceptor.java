@@ -46,7 +46,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         moi = new UtilisateurConnecte(u.getIdUtilisateur(), u.getPrenom() + " " + u.getNom(), u.getRole());
         session.setAttribute(UtilisateurConnecte.SESSION_KEY, moi);
 
-        if (!autorise(moi, request.getRequestURI())) {
+        // CHANGÉ : on passe aussi la méthode HTTP (GET / POST)
+        if (!autorise(moi, request.getRequestURI(), request.getMethod())) {
             FlashMap flash = RequestContextUtils.getOutputFlashMap(request);
             flash.put("erreur", "Accès refusé : vous n'avez pas les droits pour cette page.");
             RequestContextUtils.saveOutputFlashMap("/", request, response);
@@ -74,7 +75,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         modelAndView.addObject("peutGerer", moi.peutGerer());
     }
 
-    private boolean autorise(UtilisateurConnecte moi, String chemin) {
+    // CHANGÉ : nouvelle signature avec la méthode HTTP
+    private boolean autorise(UtilisateurConnecte moi, String chemin, String methode) {
         if (moi.estAdmin()) {
             return true;
         }
@@ -85,7 +87,15 @@ public class AuthInterceptor implements HandlerInterceptor {
             return !chemin.startsWith("/utilisateurs");
         }
         if (moi.estEmprunteur()) {
-            return chemin.startsWith("/reservations") && !chemin.endsWith("/traiter");
+            // Réservations : liste, nouveau, modifier, enregistrer, supprimer (sauf traiter)
+            if (chemin.startsWith("/reservations")) {
+                return !chemin.endsWith("/traiter");
+            }
+            // Catégories, types de matériel, matériels : uniquement la LISTE en lecture (GET)
+            boolean listeSeule = chemin.equals("/categories")
+                    || chemin.equals("/types-materiel")
+                    || chemin.equals("/materiels");
+            return listeSeule && "GET".equalsIgnoreCase(methode);
         }
         return false;
     }

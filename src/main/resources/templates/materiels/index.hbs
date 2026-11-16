@@ -2,7 +2,9 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h3 mb-0">Matériels</h1>
+    {{#peutGerer}}
     <a href="/materiels/nouveau" class="btn btn-dark">Ajouter un matériel</a>
+    {{/peutGerer}}
 </div>
 
 <table class="table table-striped align-middle">
@@ -12,7 +14,7 @@
             <th>Nom</th>
             <th>Type</th>
             <th>Disponibilité</th>
-            <th class="text-end">Actions</th>
+            {{#peutGerer}}<th class="text-end">Actions</th>{{/peutGerer}}
         </tr>
     </thead>
     <tbody>
@@ -28,6 +30,7 @@
                 {{#disponible}}<span class="badge bg-success">Disponible</span>{{/disponible}}
                 {{^disponible}}<span class="badge bg-danger">Indisponible</span>{{/disponible}}
             </td>
+            {{#peutGerer}}
             <td class="text-end">
                 <a href="/materiels/{{idMateriel}}/modifier" class="btn btn-secondary btn-sm">Modifier</a>
                 <form action="/materiels/{{idMateriel}}/supprimer" method="post" class="d-inline"
@@ -35,6 +38,7 @@
                     <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                 </form>
             </td>
+            {{/peutGerer}}
         </tr>
         {{/materiels}}
     </tbody>

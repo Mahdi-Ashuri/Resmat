@@ -1,46 +1,138 @@
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-    crossorigin="anonymous"></script>
+<footer class="site-footer">
+    <div class="container">
+        <div class="row g-5">
 
+            <div class="col-lg-4">
+                <div class="footer-brand">
+                    <span class="brand-mark"><svg class="ico"><use href="#i-box"/></svg></span> Resmat
+                </div>
+                <p class="footer-about">
+                    Resmat simplifie la gestion du matériel de votre structure : catalogue,
+                    réservations, remises et retours, avec un suivi clair pour chacun.
+                </p>
+            </div>
+
+            <div class="col-6 col-lg-2">
+                <h4>Navigation</h4>
+                <ul class="footer-links">
+                    <li><a href="/">Accueil</a></li>
+                    {{#connecte}}
+                    <li><a href="/reservations">{{#peutGerer}}Réservations{{/peutGerer}}{{^peutGerer}}Mes réservations{{/peutGerer}}</a></li>
+                    {{#peutGerer}}
+                    <li><a href="/emprunts">Emprunts</a></li>
+                    <li><a href="/materiels">Matériels</a></li>
+                    {{/peutGerer}}
+                    {{#estAdmin}}
+                    <li><a href="/utilisateurs">Utilisateurs</a></li>
+                    {{/estAdmin}}
+                    {{/connecte}}
+                    {{^connecte}}
+                    <li><a href="/#fonctionnement">Fonctionnement</a></li>
+                    <li><a href="/#profils">Profils</a></li>
+                    <li><a href="/#faq">FAQ</a></li>
+                    {{/connecte}}
+                </ul>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <h4>Mon espace</h4>
+                <ul class="footer-links">
+                    {{#connecte}}
+                    <li><a href="/reservations/nouveau">Nouvelle réservation</a></li>
+                    <li><a href="/reservations">Suivre mes demandes</a></li>
+                    {{/connecte}}
+                    {{^connecte}}
+                    <li><a href="/connexion">Se connecter</a></li>
+                    <li><a href="/inscription">Créer un compte</a></li>
+                    {{/connecte}}
+                </ul>
+            </div>
+
+            <div class="col-lg-3">
+                <h4>Contact</h4>
+                <ul class="footer-links footer-contact">
+                    <li><svg class="ico"><use href="#i-mail"/></svg><a href="mailto:contact@resmat.fr">contact@resmat.fr</a></li>
+                    <li><svg class="ico"><use href="#i-clock"/></svg><span>Lundi – vendredi, 9h – 17h</span></li>
+                    <li><svg class="ico"><use href="#i-pin"/></svg><span>Service du matériel, Paris</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; <span id="annee"></span> Resmat. Tous droits réservés.</span>
+            <span>Gestion des réservations et des prêts de matériel</span>
+        </div>
+    </div>
+</footer>
+
+<button type="button" class="to-top" id="haut" aria-label="Retour en haut"><svg class="ico"><use href="#i-up"/></svg></button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 <script>
-    // Affiche les dates ISO (2026-11-09T14:30) au format français
+    // Dates ISO (2026-11-09T14:30) -> format français
     document.querySelectorAll('.dt').forEach(function (el) {
         var texte = el.textContent.trim();
-        if (!texte) {
-            el.textContent = '—';
-            return;
-        }
-
+        if (!texte) { el.textContent = '—'; return; }
         var d = new Date(texte);
         if (!isNaN(d)) {
-            el.textContent = d.toLocaleString('fr-FR', {
-                dateStyle: 'short',
-                timeStyle: 'short'
-            });
+            el.textContent = d.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
         }
     });
-</script>
 
-<script>
-    // Lien actif dans le menu et dans les onglets (Toutes / En attente…)
-    var chemin = location.pathname;
-    var complet = location.pathname + location.search;
+    // Année du footer
+    document.getElementById('annee').textContent = new Date().getFullYear();
 
-    document.querySelectorAll('.navbar .nav-link').forEach(function (a) {
-        var h = a.getAttribute('href');
-        if (h && h !== '/' && chemin.indexOf(h) === 0) {
+    // Initiales dans l'avatar
+    document.querySelectorAll('.avatar[data-nom]').forEach(function (a) {
+        var m = a.dataset.nom.trim().split(/\s+/);
+        a.textContent = ((m[0] || '')[0] || '') + ((m[1] || '')[0] || '');
+    });
+
+    // Rôle affiché en clair
+    var roles = { ADMIN: 'Administrateur', GESTIONNAIRE: 'Gestionnaire', EMPRUNTEUR: 'Emprunteur' };
+    document.querySelectorAll('.role-label').forEach(function (el) {
+        var r = el.textContent.trim();
+        if (roles[r]) el.textContent = roles[r];
+    });
+
+    // Lien actif : menu, sous-menu et onglets
+    var chemin = location.pathname, complet = location.pathname + location.search;
+    function actif(h) { return h === '/' ? chemin === '/' : (h && h !== '#' && chemin.indexOf(h) === 0); }
+    document.querySelectorAll('.navbar .nav-link:not(.dropdown-toggle)').forEach(function (a) {
+        if (actif(a.getAttribute('href'))) a.classList.add('active');
+    });
+    document.querySelectorAll('.navbar .dropdown-item').forEach(function (a) {
+        if (actif(a.getAttribute('href'))) {
             a.classList.add('active');
+            var t = a.closest('.dropdown').querySelector('.dropdown-toggle');
+            if (t) t.classList.add('active');
         }
     });
-
     document.querySelectorAll('.nav-pills .nav-link').forEach(function (a) {
-        if (a.getAttribute('href') === complet) {
-            a.classList.add('active');
-        }
+        if (a.getAttribute('href') === complet) a.classList.add('active');
     });
-</script>
 
+    // Apparition au défilement
+    var items = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.12 });
+        items.forEach(function (el) { obs.observe(el); });
+    } else {
+        items.forEach(function (el) { el.classList.add('in'); });
+    }
+
+    // Bouton retour en haut
+    var haut = document.getElementById('haut');
+    window.addEventListener('scroll', function () {
+        haut.classList.toggle('show', window.scrollY > 400);
+    }, { passive: true });
+    haut.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+</script>
 </body>
 </html>

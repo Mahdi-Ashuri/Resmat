@@ -1,89 +1,385 @@
 {{> include/header }}
 
-<div class="text-center mb-5">
-    <h1 class="display-5 fw-bold">Resmat</h1>
-    <p class="lead text-muted">Gestion des réservations et des prêts de matériel</p>
-    {{#message}}<p class="text-muted">{{.}}</p>{{/message}}
-</div>
+{{#connecte}}
+<!-- ================= ESPACE CONNECTÉ ================= -->
+<section class="hero hero-sm">
+    <span class="eyebrow">Votre espace personnel</span>
+    <h1>Bonjour, <span class="grad">{{nomConnecte}}</span></h1>
+    <p class="hero-lead mb-3">
+        {{#estAdmin}}Vous disposez de tous les droits : catalogue, réservations, emprunts et gestion des utilisateurs.{{/estAdmin}}
+        {{^estAdmin}}{{#peutGerer}}Gérez le catalogue, traitez les demandes de réservation et suivez les remises et les retours.{{/peutGerer}}{{/estAdmin}}
+        {{^peutGerer}}Faites une demande de réservation et suivez son avancement, de l'acceptation jusqu'au retour du matériel.{{/peutGerer}}
+    </p>
+    <span class="role-pill role-pill-hero" data-role="{{roleConnecte}}"><span class="role-label">{{roleConnecte}}</span></span>
+</section>
 
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+<section class="section">
+    <div class="section-head reveal">
+        <span class="kicker">Accès rapide</span>
+        <h2>Que souhaitez-vous faire ?</h2>
+    </div>
 
-    <div class="col">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="h5 card-title">Catégories</h2>
-                <p class="card-text text-muted">Regrouper les types de matériel (informatique, audiovisuel…).</p>
+    <div class="row g-4 row-cols-1 row-cols-md-2 row-cols-lg-3">
+
+        {{^peutGerer}}
+        <div class="col">
+            <a href="/reservations/nouveau" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-plus"/></svg></span>
+                    <h3 class="h5">Nouvelle réservation</h3>
+                    <p class="text-muted mb-0">Choisissez un type de matériel et la période souhaitée.</p>
+                </div>
+                <span class="tile-go">Réserver <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/reservations" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-calendar"/></svg></span>
+                    <h3 class="h5">Mes réservations</h3>
+                    <p class="text-muted mb-0">Consultez l'état de vos demandes : en attente, acceptées ou refusées.</p>
+                </div>
+                <span class="tile-go">Consulter <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+
+        <!-- CHANGÉ : 3 tuiles de consultation pour l'emprunteur -->
+        <div class="col">
+            <a href="/categories" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-layers"/></svg></span>
+                    <h3 class="h5">Catégories</h3>
+                    <p class="text-muted mb-0">Parcourez les catégories de matériel (informatique, audiovisuel…).</p>
+                </div>
+                <span class="tile-go">Consulter <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/types-materiel" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-grid"/></svg></span>
+                    <h3 class="h5">Types de matériel</h3>
+                    <p class="text-muted mb-0">Consultez les modèles proposés et leur durée maximale d'emprunt.</p>
+                </div>
+                <span class="tile-go">Consulter <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/materiels" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-box"/></svg></span>
+                    <h3 class="h5">Matériels</h3>
+                    <p class="text-muted mb-0">Consultez les exemplaires et leur disponibilité.</p>
+                </div>
+                <span class="tile-go">Consulter <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        {{/peutGerer}}
+
+        {{#peutGerer}}
+        <div class="col">
+            <a href="/reservations?statut=attente" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-check"/></svg></span>
+                    <h3 class="h5">Réservations à traiter</h3>
+                    <p class="text-muted mb-0">Acceptez ou refusez les demandes en attente.</p>
+                </div>
+                <span class="tile-go">Traiter <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/emprunts?statut=encours" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-clipboard"/></svg></span>
+                    <h3 class="h5">Emprunts en cours</h3>
+                    <p class="text-muted mb-0">Suivez le matériel sorti et enregistrez les retours.</p>
+                </div>
+                <span class="tile-go">Suivre <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/emprunts/remise" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-tool"/></svg></span>
+                    <h3 class="h5">Enregistrer une remise</h3>
+                    <p class="text-muted mb-0">Remettez un exemplaire à l'emprunteur dont la réservation est acceptée.</p>
+                </div>
+                <span class="tile-go">Enregistrer <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/materiels" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-box"/></svg></span>
+                    <h3 class="h5">Matériels</h3>
+                    <p class="text-muted mb-0">Gérez les exemplaires et leur disponibilité.</p>
+                </div>
+                <span class="tile-go">Ouvrir <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/types-materiel" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-grid"/></svg></span>
+                    <h3 class="h5">Types de matériel</h3>
+                    <p class="text-muted mb-0">Définissez les modèles, la durée maximale d'emprunt et la mise au catalogue.</p>
+                </div>
+                <span class="tile-go">Ouvrir <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/categories" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-layers"/></svg></span>
+                    <h3 class="h5">Catégories</h3>
+                    <p class="text-muted mb-0">Regroupez les types de matériel (informatique, audiovisuel…).</p>
+                </div>
+                <span class="tile-go">Ouvrir <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        {{/peutGerer}}
+
+        {{#estAdmin}}
+        <div class="col">
+            <a href="/utilisateurs" class="card tile h-100 text-decoration-none">
+                <div class="card-body">
+                    <span class="tile-ico"><svg class="ico"><use href="#i-users"/></svg></span>
+                    <h3 class="h5">Utilisateurs</h3>
+                    <p class="text-muted mb-0">Créez les comptes et attribuez les rôles.</p>
+                </div>
+                <span class="tile-go">Administrer <svg class="ico"><use href="#i-arrow"/></svg></span>
+            </a>
+        </div>
+        {{/estAdmin}}
+
+    </div>
+</section>
+{{/connecte}}
+
+{{^connecte}}
+<!-- ================= VISITEUR : PRÉSENTATION ================= -->
+<section class="hero">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+            <span class="eyebrow">Gestion de matériel simplifiée</span>
+            <h1>Réservez, empruntez, <span class="grad">rendez</span>. Simplement.</h1>
+            <p class="hero-lead">
+                Resmat centralise le catalogue de matériel de votre structure, les demandes de
+                réservation et le suivi des prêts, du premier clic jusqu'au retour.
+            </p>
+            <div class="d-flex flex-wrap gap-3 mt-4">
+                <a href="/inscription" class="btn btn-light btn-lg">Créer un compte</a>
+                <a href="/connexion" class="btn btn-ghost btn-lg">Se connecter</a>
             </div>
-            <div class="card-footer bg-transparent border-0 pb-3">
-                <a href="/categories" class="btn btn-dark">Accéder</a>
+            <div class="hero-stats">
+                <div><strong>3</strong><span>profils d'utilisateurs</span></div>
+                <div><strong>4</strong><span>étapes de suivi</span></div>
+                <div><strong>100 %</strong><span>en ligne</span></div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 d-none d-lg-block">
+            <div class="hero-visual" aria-hidden="true">
+                <div class="mock mock-1">
+                    <span class="mock-ico"><svg class="ico"><use href="#i-calendar"/></svg></span>
+                    <div><strong>Vidéoprojecteur</strong><small>Du 12 au 14 novembre</small></div>
+                    <span class="badge bg-success">Acceptée</span>
+                </div>
+                <div class="mock mock-2">
+                    <span class="mock-ico"><svg class="ico"><use href="#i-box"/></svg></span>
+                    <div><strong>Caméra 4K</strong><small>Demande envoyée</small></div>
+                    <span class="badge bg-warning">En attente</span>
+                </div>
+                <div class="mock mock-3">
+                    <span class="mock-ico"><svg class="ico"><use href="#i-clock"/></svg></span>
+                    <div><strong>Ordinateur portable</strong><small>Retour prévu demain</small></div>
+                    <span class="badge bg-warning">En cours</span>
+                </div>
             </div>
         </div>
     </div>
+</section>
 
-    <div class="col">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="h5 card-title">Types de matériel</h2>
-                <p class="card-text text-muted">Définir les modèles, la durée maximale d'emprunt et le catalogue.</p>
+<section class="section">
+    <div class="section-head reveal">
+        <span class="kicker">Pourquoi Resmat ?</span>
+        <h2>Tout le matériel, sous contrôle</h2>
+        <p>Fini les tableurs et les échanges de mails : chaque demande, chaque prêt et chaque retour est tracé au même endroit.</p>
+    </div>
+    <div class="row gy-4 gx-4 row-cols-1 row-cols-md-2 row-cols-lg-4">
+        <div class="col reveal" style="--d:.0s">
+            <div class="card lift feature">
+                <span class="feature-ico"><svg class="ico"><use href="#i-calendar"/></svg></span>
+                <h3 class="h5">Réservation en ligne</h3>
+                <p class="text-muted mb-0">Choisissez un type de matériel et vos dates en quelques clics, à tout moment.</p>
             </div>
-            <div class="card-footer bg-transparent border-0 pb-3">
-                <a href="/types-materiel" class="btn btn-dark">Accéder</a>
+        </div>
+        <div class="col reveal" style="--d:.08s">
+            <div class="card lift feature">
+                <span class="feature-ico"><svg class="ico"><use href="#i-box"/></svg></span>
+                <h3 class="h5">Catalogue organisé</h3>
+                <p class="text-muted mb-0">Catégories, types et exemplaires : retrouvez facilement ce qui est disponible.</p>
+            </div>
+        </div>
+        <div class="col reveal" style="--d:.16s">
+            <div class="card lift feature">
+                <span class="feature-ico"><svg class="ico"><use href="#i-clock"/></svg></span>
+                <h3 class="h5">Suivi des prêts</h3>
+                <p class="text-muted mb-0">Dates de remise, retour prévu et retour effectif, avec signalement des dégradations.</p>
+            </div>
+        </div>
+        <div class="col reveal" style="--d:.24s">
+            <div class="card lift feature">
+                <span class="feature-ico"><svg class="ico"><use href="#i-shield"/></svg></span>
+                <h3 class="h5">Accès sécurisé</h3>
+                <p class="text-muted mb-0">Chaque profil accède uniquement aux fonctions qui le concernent.</p>
             </div>
         </div>
     </div>
+</section>
+{{/connecte}}
 
-    <div class="col">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="h5 card-title">Matériels</h2>
-                <p class="card-text text-muted">Gérer les exemplaires et leur disponibilité.</p>
+<!-- ================= PARCOURS (pour tous) ================= -->
+<section class="section" id="fonctionnement">
+    <div class="section-head reveal">
+        <span class="kicker">Fonctionnement</span>
+        <h2>Un parcours en 4 étapes</h2>
+        <p>De la demande au retour du matériel, chaque étape est suivie.</p>
+    </div>
+    <div class="steps">
+        <div class="step reveal" style="--d:.0s">
+            <div class="step-num">1</div>
+            <h3>Réservation</h3>
+            <p>L'emprunteur choisit un type de matériel et la période souhaitée.</p>
+        </div>
+        <div class="step reveal" style="--d:.1s">
+            <div class="step-num">2</div>
+            <h3>Traitement</h3>
+            <p>Un gestionnaire accepte ou refuse la demande, avec un motif si besoin.</p>
+        </div>
+        <div class="step reveal" style="--d:.2s">
+            <div class="step-num">3</div>
+            <h3>Remise</h3>
+            <p>Un exemplaire précis est remis, avec une date de retour prévue.</p>
+        </div>
+        <div class="step reveal" style="--d:.3s">
+            <div class="step-num">4</div>
+            <h3>Retour</h3>
+            <p>Le retour est enregistré et toute dégradation est signalée.</p>
+        </div>
+    </div>
+</section>
+
+{{^connecte}}
+<!-- ================= PROFILS ================= -->
+<section class="section" id="profils">
+    <div class="section-head reveal">
+        <span class="kicker">Profils</span>
+        <h2>Trois profils, trois espaces</h2>
+        <p>Chaque utilisateur voit uniquement ce dont il a besoin.</p>
+    </div>
+    <div class="row gy-4 gx-4 row-cols-1 row-cols-lg-3">
+
+        <div class="col reveal" style="--d:.0s">
+            <div class="card lift role-card">
+                <span class="feature-ico"><svg class="ico"><use href="#i-users"/></svg></span>
+                <h3>Emprunteur</h3>
+                <p class="sub">Pour celles et ceux qui ont besoin de matériel.</p>
+                <ul class="check-list">
+                    <li>Faire une demande de réservation</li>
+                    <li>Suivre l'état de ses demandes</li>
+                    <li>Modifier ou annuler une demande en attente</li>
+                    <!-- CHANGÉ : consultation du catalogue ajoutée -->
+                    <li>Consulter le catalogue (catégories, types, matériels)</li>
+                    <li class="off">Gestion du catalogue et des emprunts</li>
+                </ul>
             </div>
-            <div class="card-footer bg-transparent border-0 pb-3">
-                <a href="/materiels" class="btn btn-dark">Accéder</a>
+        </div>
+
+        <div class="col reveal" style="--d:.1s">
+            <div class="card lift role-card">
+                <span class="feature-ico"><svg class="ico"><use href="#i-clipboard"/></svg></span>
+                <h3>Gestionnaire</h3>
+                <p class="sub">Pour celles et ceux qui gèrent le parc de matériel.</p>
+                <ul class="check-list">
+                    <li>Gérer catégories, types et matériels</li>
+                    <li>Accepter ou refuser les réservations</li>
+                    <li>Enregistrer remises et retours</li>
+                    <li class="off">Gestion des utilisateurs</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col reveal" style="--d:.2s">
+            <div class="card lift role-card">
+                <span class="feature-ico"><svg class="ico"><use href="#i-shield"/></svg></span>
+                <h3>Administrateur</h3>
+                <p class="sub">Pour celles et ceux qui pilotent l'ensemble.</p>
+                <ul class="check-list">
+                    <li>Tous les droits du gestionnaire</li>
+                    <li>Créer et supprimer des comptes</li>
+                    <li>Attribuer et modifier les rôles</li>
+                </ul>
             </div>
         </div>
     </div>
+</section>
+{{/connecte}}
 
-    <div class="col">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="h5 card-title">Utilisateurs</h2>
-                <p class="card-text text-muted">Administrateurs, gestionnaires et emprunteurs.</p>
+<!-- ================= FAQ (pour tous) ================= -->
+<section class="section" id="faq">
+    <div class="section-head reveal">
+        <span class="kicker">FAQ</span>
+        <h2>Questions fréquentes</h2>
+    </div>
+    <div class="accordion reveal" id="faqListe">
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q1">Comment obtenir un compte ?</button>
+            </h3>
+            <div id="q1" class="accordion-collapse collapse" data-bs-parent="#faqListe">
+                <div class="accordion-body">Cliquez sur « Créer un compte » et remplissez le formulaire. Votre compte est créé avec le profil emprunteur. Un administrateur peut ensuite modifier votre rôle si nécessaire.</div>
             </div>
-            <div class="card-footer bg-transparent border-0 pb-3">
-                <a href="/utilisateurs" class="btn btn-dark">Accéder</a>
+        </div>
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q2">Combien de temps puis-je garder le matériel ?</button>
+            </h3>
+            <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faqListe">
+                <div class="accordion-body">Chaque type de matériel a une durée maximale d'emprunt. La date de retour prévue est fixée lors de la remise.</div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q3">Ma réservation a été refusée, pourquoi ?</button>
+            </h3>
+            <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faqListe">
+                <div class="accordion-body">Lorsqu'un gestionnaire refuse une demande, il peut indiquer sa motivation. Elle apparaît en survolant le statut « Refusée » dans la liste de vos réservations.</div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q4">Que faire si le matériel est abîmé ?</button>
+            </h3>
+            <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faqListe">
+                <div class="accordion-body">Signalez-le au gestionnaire lors du retour : la dégradation et un commentaire sont enregistrés dans le suivi de l'emprunt.</div>
             </div>
         </div>
     </div>
+</section>
 
-    <div class="col">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="h5 card-title">Réservations</h2>
-                <p class="card-text text-muted">Faire une demande, puis l'accepter ou la refuser.</p>
-            </div>
-            <div class="card-footer bg-transparent border-0 pb-3">
-                <a href="/reservations" class="btn btn-dark">Accéder</a>
-            </div>
+{{^connecte}}
+<!-- ================= APPEL À L'ACTION ================= -->
+<section class="section">
+    <div class="cta reveal">
+        <h2>Prêt à réserver votre matériel ?</h2>
+        <p>Créez votre compte en moins d'une minute et faites votre première demande.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="/inscription" class="btn btn-light btn-lg">Créer un compte</a>
+            <a href="/connexion" class="btn btn-ghost btn-lg">J'ai déjà un compte</a>
         </div>
     </div>
-
-    <div class="col">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h2 class="h5 card-title">Emprunts</h2>
-                <p class="card-text text-muted">Enregistrer la remise et le retour du matériel.</p>
-            </div>
-            <div class="card-footer bg-transparent border-0 pb-3">
-                <a href="/emprunts" class="btn btn-dark">Accéder</a>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<p class="text-center text-muted mt-5 mb-0">
-    Parcours : Réservation → Traitement par un gestionnaire → Remise du matériel → Retour
-</p>
+</section>
+{{/connecte}}
 
 {{> include/footer }}

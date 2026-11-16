@@ -1,7 +1,7 @@
 {{> include/header }}
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-0">Réservations</h1>
+    <h1 class="h3 mb-0">{{#peutGerer}}Réservations{{/peutGerer}}{{^peutGerer}}Mes réservations{{/peutGerer}}</h1>
     <a href="/reservations/nouveau" class="btn btn-dark">Nouvelle réservation</a>
 </div>
 
@@ -17,7 +17,7 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Emprunteur</th>
+            {{#peutGerer}}<th>Emprunteur</th>{{/peutGerer}}
             <th>Type de matériel</th>
             <th>Début</th>
             <th>Fin</th>
@@ -30,7 +30,7 @@
         {{#reservations}}
         <tr>
             <td>{{idReservation}}</td>
-            <td>{{emprunteur.prenom}} {{emprunteur.nom}}</td>
+            {{#peutGerer}}<td>{{emprunteur.prenom}} {{emprunteur.nom}}</td>{{/peutGerer}}
             <td>{{typeMateriel.nom}}</td>
             <td><span class="dt">{{dateDebut}}</span></td>
             <td><span class="dt">{{dateFin}}</span></td>
@@ -44,8 +44,10 @@
             </td>
             <td class="text-end">
                 {{^gestionnaire}}
-                <a href="/reservations/{{idReservation}}/traiter" class="btn btn-success btn-sm">Traiter</a>
-                <a href="/reservations/{{idReservation}}/modifier" class="btn btn-secondary btn-sm">Modifier</a>
+                    {{#peutGerer}}
+                    <a href="/reservations/{{idReservation}}/traiter" class="btn btn-success btn-sm">Traiter</a>
+                    {{/peutGerer}}
+                    <a href="/reservations/{{idReservation}}/modifier" class="btn btn-secondary btn-sm">Modifier</a>
                 {{/gestionnaire}}
                 <form action="/reservations/{{idReservation}}/supprimer" method="post" class="d-inline"
                       onsubmit="return confirm('Supprimer cette réservation ?');">

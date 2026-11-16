@@ -2,7 +2,9 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h3 mb-0">Catégories</h1>
+    {{#peutGerer}}
     <a href="/categories/nouveau" class="btn btn-dark">Ajouter une catégorie</a>
+    {{/peutGerer}}
 </div>
 
 <table class="table table-striped align-middle">
@@ -10,7 +12,7 @@
         <tr>
             <th>#</th>
             <th>Nom</th>
-            <th class="text-end">Actions</th>
+            {{#peutGerer}}<th class="text-end">Actions</th>{{/peutGerer}}
         </tr>
     </thead>
     <tbody>
@@ -18,6 +20,7 @@
         <tr>
             <td>{{idCategorie}}</td>
             <td>{{nom}}</td>
+            {{#peutGerer}}
             <td class="text-end">
                 <a href="/categories/{{idCategorie}}/modifier" class="btn btn-secondary btn-sm">Modifier</a>
                 <form action="/categories/{{idCategorie}}/supprimer" method="post" class="d-inline"
@@ -25,6 +28,7 @@
                     <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                 </form>
             </td>
+            {{/peutGerer}}
         </tr>
         {{/categories}}
     </tbody>
