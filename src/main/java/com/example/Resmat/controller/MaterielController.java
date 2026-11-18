@@ -1,3 +1,4 @@
+
 package com.example.Resmat.controller;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.Resmat.entities.Materiel;
@@ -31,8 +33,11 @@ public class MaterielController {
     }
 
     @GetMapping
-    public String liste(Model model) {
-        model.addAttribute("materiels", materielService.getAllMateriels());
+    public String liste(@RequestParam(name = "motCle", required = false) String motCle, Model model) {
+        String terme = motCle == null ? "" : motCle.trim();
+        model.addAttribute("materiels", materielService.rechercherParMotCle(terme));
+        model.addAttribute("motCle", terme);
+        model.addAttribute("rechercheActive", !terme.isEmpty());
         return "materiels/index";
     }
 
@@ -76,7 +81,6 @@ public class MaterielController {
         }
         return "redirect:/materiels";
     }
-
 
     private String afficherFormulaire(Model model, String titre, Materiel materiel) {
         Integer idType = materiel.getTypeMateriel() != null

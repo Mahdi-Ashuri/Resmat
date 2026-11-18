@@ -1,12 +1,11 @@
+
 package com.example.Resmat.securite;
 
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.example.Resmat.entities.Utilisateur;
 import com.example.Resmat.services.UtilisateurService;
@@ -28,6 +27,10 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 
+        if ("/error".equals(request.getRequestURI())) {
+            return true;
+        }
+
         HttpSession session = request.getSession(false);
         UtilisateurConnecte moi = UtilisateurConnecte.de(session);
 
@@ -37,37 +40,46 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         Optional<Utilisateur> enBase = utilisateurService.getUtilisateurById(moi.id());
+
         if (enBase.isEmpty()) {
             session.invalidate();
             response.sendRedirect("/connexion");
             return false;
         }
+
         Utilisateur u = enBase.get();
-        moi = new UtilisateurConnecte(u.getIdUtilisateur(), u.getPrenom() + " " + u.getNom(), u.getRole());
+
+        moi = new UtilisateurConnecte(
+                u.getIdUtilisateur(),
+                u.getPrenom() + " " + u.getNom(),
+                u.getRole()
+        );
+
         session.setAttribute(UtilisateurConnecte.SESSION_KEY, moi);
 
-        // CHANGÉ : on passe aussi la méthode HTTP (GET / POST)
         if (!autorise(moi, request.getRequestURI(), request.getMethod())) {
-            FlashMap flash = RequestContextUtils.getOutputFlashMap(request);
-            flash.put("erreur", "Accès refusé : vous n'avez pas les droits pour cette page.");
-            RequestContextUtils.saveOutputFlashMap("/", request, response);
-            response.sendRedirect("/");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
+
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) {
+
         if (modelAndView == null || modelAndView.getViewName() == null
                 || modelAndView.getViewName().startsWith("redirect:")) {
             return;
         }
+
         UtilisateurConnecte moi = UtilisateurConnecte.de(request.getSession(false));
+
         if (moi == null) {
             return;
         }
+
         modelAndView.addObject("connecte", true);
         modelAndView.addObject("nomConnecte", moi.nom());
         modelAndView.addObject("roleConnecte", moi.role());
@@ -75,28 +87,36 @@ public class AuthInterceptor implements HandlerInterceptor {
         modelAndView.addObject("peutGerer", moi.peutGerer());
     }
 
-    // CHANGÉ : nouvelle signature avec la méthode HTTP
     private boolean autorise(UtilisateurConnecte moi, String chemin, String methode) {
+
         if (moi.estAdmin()) {
             return true;
         }
-        if (chemin.equals("/") || chemin.equals("/deconnexion")) {
+
+        // Accès autorisé à tous les rôles connectés
+        if (chemin.equals("/") || chemin.equals("/deconnexion")
+                || chemin.equals("/profil")
+                || chemin.equals("/profil/mot-de-passe")) {
             return true;
         }
+
         if (moi.estGestionnaire()) {
             return !chemin.startsWith("/utilisateurs");
         }
+
         if (moi.estEmprunteur()) {
-            // Réservations : liste, nouveau, modifier, enregistrer, supprimer (sauf traiter)
+
             if (chemin.startsWith("/reservations")) {
                 return !chemin.endsWith("/traiter");
             }
-            // Catégories, types de matériel, matériels : uniquement la LISTE en lecture (GET)
+
             boolean listeSeule = chemin.equals("/categories")
                     || chemin.equals("/types-materiel")
                     || chemin.equals("/materiels");
+
             return listeSeule && "GET".equalsIgnoreCase(methode);
         }
+
         return false;
     }
 }

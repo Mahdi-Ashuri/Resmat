@@ -19,8 +19,6 @@ import com.example.Resmat.services.UtilisateurService;
 
 import jakarta.servlet.http.HttpSession;
 
-// Accessible uniquement aux administrateurs (voir AuthInterceptor) :
-// c'est ici que l'admin crée les comptes et décide des rôles.
 @Controller
 @RequestMapping("/utilisateurs")
 public class UtilisateurController {
@@ -61,14 +59,12 @@ public class UtilisateurController {
         String titre = nouveau ? "Nouvel utilisateur" : "Modifier l'utilisateur";
         UtilisateurConnecte moi = UtilisateurConnecte.de(session);
 
-        // Garde-fou : un admin ne peut pas se retirer lui-même le rôle ADMIN (il se bloquerait)
         if (!nouveau && moi != null && utilisateur.getIdUtilisateur() == moi.id()
                 && !UtilisateurService.ROLE_ADMIN.equalsIgnoreCase(utilisateur.getRole())) {
             model.addAttribute("erreur", "Vous ne pouvez pas retirer votre propre rôle d'administrateur.");
             return afficherFormulaire(model, titre, utilisateur);
         }
 
-        // Modification avec mot de passe laissé vide : on garde le mot de passe (déjà haché) actuel
         if (!nouveau && (utilisateur.getMotDePasse() == null || utilisateur.getMotDePasse().isBlank())) {
             utilisateurService.getUtilisateurById(utilisateur.getIdUtilisateur())
                     .ifPresent(existant -> utilisateur.setMotDePasse(existant.getMotDePasse()));

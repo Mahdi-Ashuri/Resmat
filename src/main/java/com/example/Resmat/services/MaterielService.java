@@ -39,6 +39,14 @@ public class MaterielService {
         return materielRepositorie.findByNomContainingIgnoreCase(nom);
     }
 
+    // US-2.4 : sans mot clé, on renvoie tout le catalogue
+    public List<Materiel> rechercherParMotCle(String motCle) {
+        if (motCle == null || motCle.isBlank()) {
+            return materielRepositorie.findAll();
+        }
+        return materielRepositorie.rechercherParMotCle(motCle.trim());
+    }
+    
     public List<Materiel> getMaterielsDisponibles() {
         return materielRepositorie.findByDisponibleTrue();
     }
