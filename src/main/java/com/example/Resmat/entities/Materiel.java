@@ -31,6 +31,10 @@ public class Materiel {
     @JoinColumn(name = "Id_TypeMateriel", nullable = false)
     private TypeMateriel typeMateriel;
 
+    // NOUVEAU CHAMP
+    @Column(name = "photo", length = 255)
+    private String photo;
+
     public Materiel() {
     }
 
@@ -72,5 +76,15 @@ public class Materiel {
 
     public void setTypeMateriel(TypeMateriel typeMateriel) {
         this.typeMateriel = typeMateriel;
+    }
+
+    // NOUVEAUX GETTER ET SETTER
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

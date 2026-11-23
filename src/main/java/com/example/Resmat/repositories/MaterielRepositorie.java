@@ -19,4 +19,5 @@ public interface MaterielRepositorie extends JpaRepository<Materiel, Integer> {
     List<Materiel> findByTypeMaterielIdTypeMaterielAndDisponibleTrue(Integer idTypeMateriel);
 
     boolean existsByTypeMaterielIdTypeMateriel(Integer idTypeMateriel);
+    long countByTypeMaterielIdTypeMateriel(Integer idTypeMateriel);
 }

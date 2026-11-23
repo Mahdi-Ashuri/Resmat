@@ -161,7 +161,7 @@ public class ReservationService {
 
         if (accepte) {
             Integer idType = reservation.getTypeMateriel().getIdTypeMateriel();
-            long nbMateriels = materielRepositorie.findByTypeMaterielIdTypeMateriel(idType).size();
+            long nbMateriels = materielRepositorie.countByTypeMaterielIdTypeMateriel(idType);
             long dejaReserves = reservationRepositorie.countAccepteesSurPeriode(
                     idType, reservation.getDateDebut(), reservation.getDateFin());
             if (dejaReserves >= nbMateriels) {
@@ -189,4 +189,5 @@ public class ReservationService {
         }
         reservationRepositorie.deleteById(id);
     }
+    
 }

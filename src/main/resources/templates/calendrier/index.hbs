@@ -1,0 +1,70 @@
+{{> include/header }}
+
+<h1 class="h3 mb-3">Calendrier de disponibilité</h1>
+
+{{#aucunType}}
+<div class="alert alert-warning" role="alert">Aucun type de matériel n'est proposé au catalogue.</div>
+{{/aucunType}}
+
+{{^aucunType}}
+<form action="/calendrier" method="get" class="row g-2 align-items-end mb-2">
+    <input type="hidden" name="mois" value="{{moisCourant}}">
+    <div class="col-md-6">
+        <label for="type" class="form-label">Type de matériel</label>
+        <select class="form-select" id="type" name="type" onchange="this.form.submit()">
+            {{#typesOptions}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+            {{/typesOptions}}
+        </select>
+    </div>
+    <div class="col-auto"><noscript><button type="submit" class="btn btn-primary">Afficher</button></noscript></div>
+</form>
+
+<p class="text-muted small">
+    {{capacite}} exemplaire(s) · durée maximale d'emprunt : {{dureeMax}} jour(s)
+</p>
+
+{{#aucunExemplaire}}
+<div class="alert alert-warning" role="alert">
+    Aucun exemplaire n'est enregistré pour ce type : il ne peut pas être réservé pour le moment.
+</div>
+{{/aucunExemplaire}}
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <a class="btn btn-outline-secondary btn-sm" href="/calendrier?type={{idType}}&amp;mois={{moisPrecedent}}">&laquo; Mois précédent</a>
+    <h2 class="h5 mb-0">{{libelleMois}}</h2>
+    <a class="btn btn-outline-secondary btn-sm" href="/calendrier?type={{idType}}&amp;mois={{moisSuivant}}">Mois suivant &raquo;</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered cal-table mb-2">
+        <thead>
+            <tr><th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th><th>Dim</th></tr>
+        </thead>
+        <tbody>
+            {{#semaines}}
+            <tr>
+                {{#jours}}
+                <td class="cal-jour{{#horsMois}} cal-hors{{/horsMois}}{{#passe}} cal-passe{{/passe}}{{#libre}} cal-libre{{/libre}}{{#partiel}} cal-partiel{{/partiel}}{{#complet}} cal-complet{{/complet}}{{#aujourdhui}} cal-today{{/aujourdhui}}"
+                    title="{{libres}} sur {{capacite}} disponible(s)">
+                    {{#reservable}}<a class="cal-num stretched-link" href="/reservations/nouveau?type={{idType}}&amp;debut={{date}}">{{numero}}</a>{{/reservable}}
+                    {{^reservable}}<span class="cal-num">{{numero}}</span>{{/reservable}}
+                    {{^passe}}<span class="cal-info">{{libres}}/{{capacite}} libre(s)</span>{{/passe}}
+                </td>
+                {{/jours}}
+            </tr>
+            {{/semaines}}
+        </tbody>
+    </table>
+</div>
+
+<div class="d-flex flex-wrap gap-3 small mb-2">
+    <span><span class="cal-pastille cal-libre"></span> Entièrement libre</span>
+    <span><span class="cal-pastille cal-partiel"></span> Partiellement réservé</span>
+    <span><span class="cal-pastille cal-complet"></span> Complet</span>
+    <span><span class="cal-pastille cal-passe"></span> Jour passé</span>
+</div>
+<p class="small text-muted">Cliquez sur un jour disponible pour préparer une réservation à cette date.</p>
+{{/aucunType}}
+
+{{> include/footer }}
