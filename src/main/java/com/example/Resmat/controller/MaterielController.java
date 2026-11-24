@@ -1,3 +1,4 @@
+
 package com.example.Resmat.controller;
 
 import java.util.List;
@@ -33,8 +34,11 @@ public class MaterielController {
     }
 
     @GetMapping
-    public String liste(Model model) {
-        model.addAttribute("materiels", materielService.getAllMateriels());
+    public String liste(@RequestParam(name = "motCle", required = false) String motCle, Model model) {
+        String terme = motCle == null ? "" : motCle.trim();
+        model.addAttribute("materiels", materielService.rechercherParMotCle(terme));
+        model.addAttribute("motCle", terme);
+        model.addAttribute("rechercheActive", !terme.isEmpty());
         return "materiels/index";
     }
 

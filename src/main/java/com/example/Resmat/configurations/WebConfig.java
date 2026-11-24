@@ -28,7 +28,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/connexion",
                         "/inscription",
-                        "/error",
                         "/favicon.ico",
                         "/css/**",
                         "/js/**"

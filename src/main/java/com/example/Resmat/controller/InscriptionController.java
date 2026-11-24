@@ -93,7 +93,7 @@ public class InscriptionController {
             model.addAttribute("email", email);
             model.addAttribute("login", login);
 
-            return "inscription/inscription";
+            return "connexion/inscription";
         }
     }
 }

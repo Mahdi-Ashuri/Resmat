@@ -1,12 +1,11 @@
+
 package com.example.Resmat.securite;
 
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.example.Resmat.entities.Utilisateur;
 import com.example.Resmat.services.UtilisateurService;
@@ -28,6 +27,10 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) throws Exception {
+
+        if ("/error".equals(request.getRequestURI())) {
+            return true;
+        }
 
         HttpSession session = request.getSession(false);
         UtilisateurConnecte moi = UtilisateurConnecte.de(session);

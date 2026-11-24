@@ -1,0 +1,67 @@
+{{> include/header }}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <h1 class="h3 mb-4">Mon profil</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Mes informations</h2>
+
+                <form action="/profil" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="prenom" class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="prenom" name="prenom" value="{{prenom}}" maxlength="50" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom" value="{{nom}}" maxlength="50" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="text" class="form-control" value="{{email}}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Login</label>
+                        <input type="text" class="form-control" value="{{login}}" disabled>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label d-block">Rôle</label>
+                        <span class="role-pill" data-role="{{role}}"><span class="role-label">{{role}}</span></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Changer mon mot de passe</h2>
+
+                <form action="/profil/mot-de-passe" method="post">
+                    <div class="mb-3">
+                        <label for="ancien" class="form-label">Mot de passe actuel</label>
+                        <input type="password" class="form-control" id="ancien" name="ancien" autocomplete="current-password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nouveau" class="form-label">Nouveau mot de passe</label>
+                        <input type="password" class="form-control" id="nouveau" name="nouveau" minlength="8" autocomplete="new-password" required>
+                        <div class="form-text">8 caractères minimum.</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="confirmation" class="form-label">Confirmer le nouveau mot de passe</label>
+                        <input type="password" class="form-control" id="confirmation" name="confirmation" minlength="8" autocomplete="new-password" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark">Changer le mot de passe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> include/footer }}

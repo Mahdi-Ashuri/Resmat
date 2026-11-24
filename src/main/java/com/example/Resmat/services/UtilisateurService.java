@@ -81,7 +81,6 @@ public class UtilisateurService {
         }
         utilisateur.setRole(role);
 
-        // Unicité du login et de l'email (en excluant l'utilisateur lui-même lors d'une modification)
         int id = utilisateur.getIdUtilisateur();
         utilisateurRepositorie.findByLogin(utilisateur.getLogin())
                 .filter(u -> u.getIdUtilisateur() != id)
@@ -90,7 +89,6 @@ public class UtilisateurService {
                 .filter(u -> u.getIdUtilisateur() != id)
                 .ifPresent(u -> { throw new IllegalStateException("Cet email est déjà utilisé."); });
 
-        // Hachage BCrypt, sauf si le mot de passe est déjà haché (cas d'une modification)
         if (!estDejaHache(utilisateur.getMotDePasse())) {
             utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
         }
@@ -98,12 +96,36 @@ public class UtilisateurService {
         return utilisateurRepositorie.save(utilisateur);
     }
 
-    // Vérifie login + mot de passe en clair ; renvoie l'utilisateur si c'est bon
     public Optional<Utilisateur> authentifier(String login, String motDePasseClair) {
         return utilisateurRepositorie.findByLogin(login)
                 .filter(u -> passwordEncoder.matches(motDePasseClair, u.getMotDePasse()));
     }
+    @Transactional
+    public Utilisateur modifierProfil(Integer id, String prenom, String nom) {
+        Utilisateur u = utilisateurRepositorie.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable."));
+        u.setPrenom(prenom);
+        u.setNom(nom);
+        return saveUtilisateur(u); // valide (non vide), nettoie et sauvegarde
+    }
 
+    @Transactional
+    public void changerMotDePasse(Integer id, String ancien, String nouveau, String confirmation) {
+        Utilisateur u = utilisateurRepositorie.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable."));
+
+        if (!passwordEncoder.matches(ancien, u.getMotDePasse())) {
+            throw new IllegalArgumentException("Le mot de passe actuel est incorrect.");
+        }
+        if (nouveau == null || nouveau.length() < 8) {
+            throw new IllegalArgumentException("Le nouveau mot de passe doit contenir au moins 8 caractères.");
+        }
+        if (!nouveau.equals(confirmation)) {
+            throw new IllegalArgumentException("Les deux mots de passe ne sont pas identiques.");
+        }
+        u.setMotDePasse(passwordEncoder.encode(nouveau));
+        utilisateurRepositorie.save(u);
+    }
     @Transactional
     public void deleteUtilisateur(Integer id) {
         if (!utilisateurRepositorie.existsById(id)) {

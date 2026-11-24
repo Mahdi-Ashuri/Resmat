@@ -72,12 +72,16 @@
                 {{#peutGerer}}
                 <li class="nav-item"><a class="nav-link" href="/emprunts">Emprunts</a></li>
                 {{/peutGerer}}
-
                 {{#estAdmin}}
                 <li class="nav-item"><a class="nav-link" href="/utilisateurs">Utilisateurs</a></li>
                 {{/estAdmin}}
                 {{/connecte}}
-
+				<li>
+    				<a class="dropdown-item" href="/profil">
+        				<svg class="ico"><use href="#i-users"/></svg>
+        					Mon profil
+   					 </a>
+				</li>
                 {{^connecte}}
                 <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
                 <li class="nav-item"><a class="nav-link" href="/#fonctionnement">Fonctionnement</a></li>

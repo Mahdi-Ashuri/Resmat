@@ -1,3 +1,4 @@
+
 package com.example.Resmat.controller;
 
 import java.util.Optional;
@@ -9,19 +10,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Resmat.entities.Utilisateur;
+import com.example.Resmat.securite.LimiteurConnexion;
 import com.example.Resmat.securite.UtilisateurConnecte;
 import com.example.Resmat.services.UtilisateurService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ConnexionController {
 
     private final UtilisateurService utilisateurService;
+    private final LimiteurConnexion limiteur;
 
-    public ConnexionController(UtilisateurService utilisateurService) {
+    public ConnexionController(
+            UtilisateurService utilisateurService,
+            LimiteurConnexion limiteur) {
+
         this.utilisateurService = utilisateurService;
+        this.limiteur = limiteur;
     }
 
     @GetMapping("/connexion")
@@ -48,12 +56,33 @@ public class ConnexionController {
             @RequestParam("login") String login,
             @RequestParam("motDePasse") String motDePasse,
             HttpServletRequest request,
+            HttpServletResponse response,
             Model model) {
 
+        String loginNettoye = login.trim();
+        String ip = request.getRemoteAddr();
+
+        long attente = limiteur.secondesRestantes(loginNettoye, ip);
+
+        if (attente > 0) {
+            response.setStatus(429);
+
+            model.addAttribute("erreur",
+                    "Trop de tentatives échouées. Réessayez dans "
+                    + ((attente + 59) / 60) + " minute(s).");
+
+            model.addAttribute("login", login);
+
+            return "connexion/connexion";
+        }
+
         Optional<Utilisateur> utilisateur =
-                utilisateurService.authentifier(login.trim(), motDePasse);
+                utilisateurService.authentifier(loginNettoye, motDePasse);
 
         if (utilisateur.isEmpty()) {
+
+            limiteur.enregistrerEchec(loginNettoye, ip);
+
             model.addAttribute("erreur",
                     "Login ou mot de passe incorrect.");
 
@@ -61,6 +90,8 @@ public class ConnexionController {
 
             return "connexion/connexion";
         }
+
+        limiteur.reinitialiser(loginNettoye);
 
         Utilisateur u = utilisateur.get();
 

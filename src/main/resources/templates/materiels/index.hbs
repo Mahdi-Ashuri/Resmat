@@ -10,7 +10,15 @@
     </a>
     {{/peutGerer}}
 </div>
-
+<form action="/materiels" method="get" class="input-group mb-3">
+    <input type="search" class="form-control" name="motCle" value="{{motCle}}"
+           placeholder="Rechercher par mot clé (nom, description, type)" maxlength="100"
+           aria-label="Rechercher un matériel">
+    <button type="submit" class="btn btn-dark">Rechercher</button>
+    {{#rechercheActive}}
+    <a href="/materiels" class="btn btn-outline-secondary">Réinitialiser</a>
+    {{/rechercheActive}}
+</form>
 <table class="table table-striped align-middle">
     <thead>
         <tr>
