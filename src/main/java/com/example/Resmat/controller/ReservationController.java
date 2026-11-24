@@ -1,7 +1,9 @@
 package com.example.Resmat.controller;
 
 import java.beans.PropertyEditorSupport;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.Resmat.entities.Reservation;
+import com.example.Resmat.entities.TypeMateriel;
 import com.example.Resmat.entities.Utilisateur;
 import com.example.Resmat.securite.UtilisateurConnecte;
 import com.example.Resmat.services.ReservationService;
@@ -92,8 +95,26 @@ public class ReservationController {
     // ---------- Création / modification ----------
 
     @GetMapping("/nouveau")
-    public String nouveau(Model model) {
-        return afficherFormulaire(model, "Nouvelle réservation", new Reservation());
+    public String nouveau(@RequestParam(name = "type", required = false) Integer idType,
+                          @RequestParam(name = "debut", required = false) String debut,
+                          Model model) {
+        Reservation reservation = new Reservation();
+
+        if (idType != null) {
+            TypeMateriel type = new TypeMateriel();
+            type.setIdTypeMateriel(idType);
+            reservation.setTypeMateriel(type);
+        }
+        if (debut != null) {
+            try {
+                LocalDate jour = LocalDate.parse(debut);           // 2026-11-20
+                reservation.setDateDebut(jour.atTime(9, 0));
+                reservation.setDateFin(jour.atTime(17, 0));
+            } catch (DateTimeParseException ignored) {
+                // date invalide : on laisse les champs vides
+            }
+        }
+        return afficherFormulaire(model, "Nouvelle réservation", reservation);
     }
 
     @GetMapping("/{id}/modifier")

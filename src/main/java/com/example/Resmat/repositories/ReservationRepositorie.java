@@ -42,4 +42,14 @@ public interface ReservationRepositorie extends JpaRepository<Reservation, Integ
     long countAccepteesSurPeriode(@Param("idType") Integer idType,
                                   @Param("debut") LocalDateTime debut,
                                   @Param("fin") LocalDateTime fin);
+    @Query("""
+    	       SELECT r FROM Reservation r
+    	       WHERE r.typeMateriel.idTypeMateriel = :idType
+    	         AND r.avis = true
+    	         AND r.dateDebut < :fin
+    	         AND r.dateFin > :debut
+    	       """)
+    	List<Reservation> findAccepteesSurPeriode(@Param("idType") Integer idType,
+    	                                          @Param("debut") LocalDateTime debut,
+    	                                          @Param("fin") LocalDateTime fin);
 }

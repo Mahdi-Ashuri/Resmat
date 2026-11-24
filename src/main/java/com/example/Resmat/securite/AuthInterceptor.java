@@ -24,8 +24,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Object handler) throws Exception {
 
         if ("/error".equals(request.getRequestURI())) {
             return true;
@@ -39,7 +40,8 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        Optional<Utilisateur> enBase = utilisateurService.getUtilisateurById(moi.id());
+        Optional<Utilisateur> enBase =
+                utilisateurService.getUtilisateurById(moi.id());
 
         if (enBase.isEmpty()) {
             session.invalidate();
@@ -52,13 +54,30 @@ public class AuthInterceptor implements HandlerInterceptor {
         moi = new UtilisateurConnecte(
                 u.getIdUtilisateur(),
                 u.getPrenom() + " " + u.getNom(),
-                u.getRole()
-        );
+                u.getRole());
 
-        session.setAttribute(UtilisateurConnecte.SESSION_KEY, moi);
+        session.setAttribute(
+                UtilisateurConnecte.SESSION_KEY,
+                moi);
 
-        if (!autorise(moi, request.getRequestURI(), request.getMethod())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        if (!autorise(
+                moi,
+                request.getRequestURI(),
+                request.getMethod())) {
+
+            FlashMap flash =
+                    RequestContextUtils.getOutputFlashMap(request);
+
+            flash.put(
+                    "erreur",
+                    "Accès refusé : vous n'avez pas les droits pour cette page.");
+
+            RequestContextUtils.saveOutputFlashMap(
+                    "/",
+                    request,
+                    response);
+
+            response.sendRedirect("/");
             return false;
         }
 
@@ -66,15 +85,19 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+    public void postHandle(HttpServletRequest request,
+                           HttpServletResponse response,
+                           Object handler,
                            ModelAndView modelAndView) {
 
-        if (modelAndView == null || modelAndView.getViewName() == null
+        if (modelAndView == null
+                || modelAndView.getViewName() == null
                 || modelAndView.getViewName().startsWith("redirect:")) {
             return;
         }
 
-        UtilisateurConnecte moi = UtilisateurConnecte.de(request.getSession(false));
+        UtilisateurConnecte moi =
+                UtilisateurConnecte.de(request.getSession(false));
 
         if (moi == null) {
             return;
@@ -87,16 +110,22 @@ public class AuthInterceptor implements HandlerInterceptor {
         modelAndView.addObject("peutGerer", moi.peutGerer());
     }
 
-    private boolean autorise(UtilisateurConnecte moi, String chemin, String methode) {
+    private boolean autorise(UtilisateurConnecte moi,
+                             String chemin,
+                             String methode) {
 
         if (moi.estAdmin()) {
             return true;
         }
 
-        // Accès autorisé à tous les rôles connectés
-        if (chemin.equals("/") || chemin.equals("/deconnexion")
-                || chemin.equals("/profil")
-                || chemin.equals("/profil/mot-de-passe")) {
+        if (chemin.equals("/")
+                || chemin.equals("/deconnexion")) {
+            return true;
+        }
+
+        // AJOUT POUR LES PHOTOS
+        if (chemin.startsWith("/photos/")
+                && "GET".equalsIgnoreCase(methode)) {
             return true;
         }
 
@@ -110,11 +139,14 @@ public class AuthInterceptor implements HandlerInterceptor {
                 return !chemin.endsWith("/traiter");
             }
 
-            boolean listeSeule = chemin.equals("/categories")
+            boolean listeSeule =
+                    chemin.equals("/categories")
                     || chemin.equals("/types-materiel")
-                    || chemin.equals("/materiels");
+                    || chemin.equals("/materiels")
+                    || chemin.equals("/calendrier");
 
-            return listeSeule && "GET".equalsIgnoreCase(methode);
+            return listeSeule
+                    && "GET".equalsIgnoreCase(methode);
         }
 
         return false;

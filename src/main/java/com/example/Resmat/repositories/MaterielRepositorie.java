@@ -30,4 +30,5 @@ public interface MaterielRepositorie extends JpaRepository<Materiel, Integer> {
     List<Materiel> rechercherParMotCle(@Param("motCle") String motCle);
 
     boolean existsByTypeMaterielIdTypeMateriel(Integer idTypeMateriel);
+    long countByTypeMaterielIdTypeMateriel(Integer idTypeMateriel);
 }
